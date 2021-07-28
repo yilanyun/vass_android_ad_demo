@@ -14,6 +14,14 @@ import com.yilan.sdk.ylad.engine.IYLAdEngine;
 import com.yilan.sdk.ylad.entity.AdState;
 import com.yilan.sdk.ylad.manager.YLAdManager;
 
+/**
+ * 插屏广告
+ * <p>
+ * 插屏广告是移动广告的一种常见形式，在应用流程中弹出，当应用展示插屏广告时，
+ * 用户可以选择点击广告，访问其目标网址，也可以将其关闭并返回应用
+ * <p>
+ * 文档地址：https://docs.vaas.cn/feed/client/android/ad_sdk
+ */
 public class InterstitialAdActivity extends BaseAdActivity {
     String adName = "插屏广告";
 
@@ -25,22 +33,21 @@ public class InterstitialAdActivity extends BaseAdActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_common_ad);
         container = findViewById(R.id.root_container);
-        interstitialAd = YLAdManager.with(this).getEngine(YLAdConstants.AdName.VERTICAL_INTERSTITIAL, "");
+        interstitialAd = YLAdManager.with(this).getEngine(YLAdConstants.AdName.VERTICAL_INTERSTITIAL);
+        interstitialAd.setAdListener(listener);
     }
 
     public void requestAndShow(View view) {
-        ToastUtil.show(context, "开始请求"+adName);
+        ToastUtil.show(context, "开始请求" + adName);
         dialog.show();
         interstitialAd.reset();
-        interstitialAd.setAdListener(listener);
         interstitialAd.request(container);
     }
 
     public void request(View view) {
-        ToastUtil.show(context, "开始请求"+adName);
+        ToastUtil.show(context, "开始请求" + adName);
         dialog.show();
         interstitialAd.reset();
-        interstitialAd.setAdListener(listener);
         interstitialAd.preRequest(container);
     }
 
@@ -48,7 +55,7 @@ public class InterstitialAdActivity extends BaseAdActivity {
         if (succeed && interstitialAd.getState() == AdState.SUCCESS) {
             interstitialAd.renderAd();
         } else {
-            ToastUtil.show(context, String.format("还没有请求%s或请求失败，请尝试重新请求",adName));
+            ToastUtil.show(context, String.format("还没有请求%s或请求失败，请尝试重新请求", adName));
         }
     }
 
@@ -66,10 +73,14 @@ public class InterstitialAdActivity extends BaseAdActivity {
             super.onError(adType, source, reqId, code, msg, pid);
             succeed = false;
             dialog.dismiss();
-            ToastUtil.show(context, "广告请求失败！");
+            ToastUtil.show(context, "广告请求失败: " + msg);
         }
 
-
+        @Override
+        public void onClose(String adType, int source, String reqId, String pid) {
+            super.onClose(adType, source, reqId, pid);
+            ToastUtil.show(context, "广告关闭！");
+        }
 
         @Override
         public void onClick(String adType, int source, String reqId, String pid) {

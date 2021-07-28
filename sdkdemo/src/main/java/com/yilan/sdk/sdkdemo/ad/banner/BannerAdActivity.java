@@ -14,24 +14,25 @@ import com.yilan.sdk.ylad.engine.IYLAdEngine;
 import com.yilan.sdk.ylad.entity.AdState;
 import com.yilan.sdk.ylad.manager.YLAdManager;
 
+/**
+ * Banner广告
+ * Banner广告是横向贯穿整个可视页面的模板广告，需要将Banner广告视图添加到承载的广告容器中
+ * 如下演示的是banner广告的请求&展示
+ * 文档地址：https://docs.vaas.cn/feed/client/android/ad_sdk
+ */
 public class BannerAdActivity extends BaseAdActivity {
 
-    IYLAdEngine bannerAd;
-    IYLAdEngine expressBannerAd;
-    ViewGroup bannerContainer;
-    ViewGroup expressContainer;
+    private IYLAdEngine bannerAd;
+    private ViewGroup bannerContainer;
     private YLAdManager adManager;
-    boolean expressSucceed = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_banner_ad);
         bannerContainer = findViewById(R.id.banner_container);
-        expressContainer = findViewById(R.id.express_banner_container);
         adManager = YLAdManager.with(this);
-        bannerAd = adManager.getEngine(YLAdConstants.AdName.BANNER, "");
-        expressBannerAd = adManager.getEngine(YLAdConstants.AdName.EXPRESS_BANNER, "");
+        bannerAd = adManager.getEngine(YLAdConstants.AdName.BANNER);
     }
 
     public void requestBannerAndShow(View view) {
@@ -58,30 +59,6 @@ public class BannerAdActivity extends BaseAdActivity {
         }
     }
 
-    public void requestExpressAndShow(View view) {
-        ToastUtil.show(context, "开始请求");
-        dialog.show();
-        expressBannerAd.reset();
-        expressBannerAd.setAdListener(expressListener);
-        expressBannerAd.request(expressContainer);
-    }
-
-    public void requestExpressBanner(View view) {
-        ToastUtil.show(context, "开始请求");
-        dialog.show();
-        expressBannerAd.reset();
-        expressBannerAd.setAdListener(expressListener);
-        expressBannerAd.preRequest(expressContainer);
-    }
-
-    public void renderExpressBanner(View view) {
-        if (expressSucceed && expressBannerAd.getState() == AdState.SUCCESS) {
-            expressBannerAd.renderAd();
-        } else {
-            ToastUtil.show(context, "还没有请求express banner广告或请求失败，请尝试重新请求");
-        }
-    }
-
     YLAdListener listener = new YLAdListener() {
 
 
@@ -98,7 +75,7 @@ public class BannerAdActivity extends BaseAdActivity {
             super.onError(adType, source, reqId, code, msg, pid);
             succeed = false;
             dialog.dismiss();
-            ToastUtil.show(context, "广告请求失败！");
+            ToastUtil.show(context, "广告请求失败: " + msg);
         }
 
         @Override
@@ -132,57 +109,6 @@ public class BannerAdActivity extends BaseAdActivity {
             ToastUtil.show(context, "广告为空，请先在一览云后台配置该广告！");
         }
 
-    };
-
-    YLAdListener expressListener = new YLAdListener() {
-
-        @Override
-        public void onSuccess(String adType, int source, String reqId, String pid) {
-            super.onSuccess(adType, source, reqId, pid);
-            expressSucceed = true;
-            dialog.dismiss();
-            ToastUtil.show(context, "广告请求成功：来源：" + Utils.getSourceName(source));
-        }
-
-        @Override
-        public void onError(String adType, int source, String reqId, int code, String msg, String pid) {
-            super.onError(adType, source, reqId, code, msg, pid);
-            expressSucceed = false;
-            dialog.dismiss();
-            ToastUtil.show(context, "广告请求失败！");
-        }
-
-        @Override
-        public void onClick(String adType, int source, String reqId, String pid) {
-            super.onClick(adType, source, reqId, pid);
-            ToastUtil.show(context, "广告点击");
-        }
-
-        @Override
-        public void onSkip(String adType, int source, String reqId, String pid) {
-            super.onSkip(adType, source, reqId, pid);
-            ToastUtil.show(context, "广告跳过");
-        }
-
-        @Override
-        public void onTimeOver(String adType, int source, String reqId, String pid) {
-            super.onTimeOver(adType, source, reqId, pid);
-            ToastUtil.show(context, "倒计时完毕");
-        }
-
-
-        @Override
-        public void onVideoStart(String adType, int source, String reqId, String pid) {
-            super.onVideoStart(adType, source, reqId, pid);
-            ToastUtil.show(context, "视频播放开始");
-        }
-
-        @Override
-        public void onAdEmpty(String adType, int source, String reqId, String pid) {
-            super.onAdEmpty(adType, source, reqId, pid);
-            dialog.dismiss();
-            ToastUtil.show(context, "广告为空，请先在一览云后台配置该广告！");
-        }
     };
 
 }

@@ -17,22 +17,13 @@
             android:onClick="requestSplashAndShow"
             android:text="请求开屏广告并展现" />
 
-        <Button
+        <TextView
+            android:id="@+id/text_log"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:onClick="requestSplash"
-            android:text="请求开屏广告" />
+            android:textColor="#999"
+            android:textSize="14sp" />
 
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:onClick="renderSplash"
-            android:text="开屏广告展现" />
     </LinearLayout>
 
 </FrameLayout>

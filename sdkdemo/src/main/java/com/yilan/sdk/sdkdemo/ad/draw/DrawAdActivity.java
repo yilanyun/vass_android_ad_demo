@@ -12,6 +12,11 @@ import com.yilan.sdk.ylad.constant.YLAdConstants;
 import com.yilan.sdk.ylad.engine.IYLAdEngine;
 import com.yilan.sdk.ylad.manager.YLAdManager;
 
+/**
+ * 小视频广告
+ * 类似小视频一样的视频广告
+ * 文档地址：https://docs.vaas.cn/feed/client/android/ad_sdk
+ */
 public class DrawAdActivity extends BaseAdActivity {
 
     IYLAdEngine drawAd;
@@ -48,7 +53,7 @@ public class DrawAdActivity extends BaseAdActivity {
             super.onError(adType, source, reqId, code, msg, pid);
             succeed = false;
             dialog.dismiss();
-            ToastUtil.show(context, "广告请求失败！");
+            ToastUtil.show(context, "广告请求失败: " + msg);
         }
 
 
