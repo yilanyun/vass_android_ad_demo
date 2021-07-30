@@ -7,7 +7,11 @@ android {
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 408
-        versionName "3.3.3.12"
+        versionName "3.3.3.16"
+
+        ndk {
+            abiFilters 'armeabi-v7a'
+        }
     }
 
     buildTypes {
@@ -54,7 +58,7 @@ dependencies {
     implementation 'tv.yilan.ijk.media:ijkplayer-armv7a:0.8.8'
 
     //一览sdk
-    implementation ("com.yilan.sdk:ylad_common:3.3.3.14")
+    implementation("com.yilan.sdk:ylad_common:3.3.3.16")
     implementation 'com.android.support:multidex:1.0.3'
 
 }
